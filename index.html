@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="EYEZEE Agricultural Marketplace — connecting farmers, buyers and delivery partners across Uganda.">
+<title>EYEZEE | Agricultural Marketplace</title>
+<style>
+:root{--green:#14532d;--deep:#0b3820;--leaf:#278348;--lime:#d9efb2;--gold:#e7b83e;--cream:#f7faf4;--ink:#18251c;--muted:#66756a;--line:#e3eae2}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:#fff}a{color:inherit;text-decoration:none}button,input,select{font:inherit}
+.topbar{background:var(--deep);color:#eaf5e9;padding:9px 5%;font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header{padding:18px 5%;display:flex;align-items:center;gap:24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;min-width:190px}.logo{width:46px;height:46px;border-radius:14px;background:var(--green);display:grid;place-items:center;color:white;font-size:25px}.brand strong{font-size:25px;letter-spacing:1.5px;color:var(--green);display:block}.brand small{color:var(--muted);font-size:10px;letter-spacing:1.2px;text-transform:uppercase}
+.search{display:flex;flex:1;max-width:650px;border:1px solid #d5dfd5;border-radius:10px;overflow:hidden}.search input{border:0;outline:0;padding:13px 15px;flex:1;min-width:0}.search button{border:0;background:var(--green);color:white;padding:0 20px;cursor:pointer}
+.actions{display:flex;gap:10px;margin-left:auto;align-items:center}.btn{border:1px solid var(--green);padding:11px 16px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;background:#fff;color:var(--green)}.btn.primary{background:var(--green);color:white}.btn:hover{filter:brightness(.94)}
+nav{padding:12px 5%;display:flex;gap:25px;overflow:auto;white-space:nowrap;border-bottom:1px solid var(--line);font-size:14px;color:#425348}nav a:hover{color:var(--leaf)}
+.hero{margin:26px auto 0;width:90%;max-width:1320px;min-height:370px;border-radius:20px;overflow:hidden;background:linear-gradient(90deg,rgba(6,43,23,.94),rgba(9,55,27,.72),rgba(9,55,27,.08)),url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=85') center/cover;display:flex;align-items:center;color:white}
+.hero-content{padding:50px;max-width:650px}.eyebrow{color:#f2d77e;text-transform:uppercase;letter-spacing:2px;font-weight:800;font-size:12px}.hero h1{font-size:clamp(34px,5vw,58px);line-height:1.06;margin:14px 0}.hero p{font-size:17px;line-height:1.65;color:#edf5eb;max-width:560px}.hero .btn{margin-top:12px;background:var(--gold);border-color:var(--gold);color:#18351e}
+.features{width:90%;max-width:1320px;margin:20px auto;display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:14px;background:#fff}.feature{padding:18px;display:flex;gap:12px;align-items:center;border-right:1px solid var(--line)}.feature:last-child{border:0}.feature .ico{font-size:25px}.feature b{display:block;font-size:14px}.feature small{color:var(--muted);font-size:12px}
+section{width:90%;max-width:1320px;margin:48px auto}.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:20px}.section-head h2{font-size:27px;margin:0;color:var(--deep)}.section-head p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.categories{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}.category{border:1px solid var(--line);border-radius:13px;padding:20px 12px;text-align:center;background:var(--cream);transition:.2s}.category:hover{transform:translateY(-3px);border-color:#9fbea4}.category .emoji{font-size:34px;display:block;margin-bottom:9px}.category b{font-size:14px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.toolbar select{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:white;color:#45534a}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.product{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:white}.product img{width:100%;height:175px;object-fit:cover;background:#eef2ec}.product-body{padding:15px}.tag{font-size:11px;color:var(--leaf);font-weight:800;text-transform:uppercase;letter-spacing:.6px}.product h3{font-size:17px;margin:7px 0}.location{color:var(--muted);font-size:12px}.price{font-size:19px;font-weight:800;color:var(--deep);margin:12px 0}.product-actions{display:flex;gap:8px}.product-actions button{flex:1;padding:10px 7px;font-size:12px}
+.join{background:var(--cream);border-radius:18px;padding:34px;display:flex;justify-content:space-between;align-items:center;gap:20px}.join h2{margin:0 0 8px;color:var(--deep)}.join p{margin:0;color:var(--muted)}
+footer{background:var(--deep);color:#eaf5e9;padding:42px 5% 22px;margin-top:55px}.footer-grid{max-width:1320px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:35px}.footer-grid p,.footer-grid a{color:#c5d8c8;font-size:14px;line-height:1.8}.footer-grid h3{color:white}.copyright{border-top:1px solid #42634b;margin-top:28px;padding-top:18px;text-align:center;color:#b7cbbb;font-size:12px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-card{background:white;border-radius:16px;padding:25px;max-width:450px;width:100%;position:relative}.modal-card h2{margin-top:0;color:var(--deep)}.modal-card input,.modal-card select{width:100%;padding:12px;margin:7px 0 14px;border:1px solid var(--line);border-radius:8px}.close{position:absolute;right:16px;top:12px;border:0;background:none;font-size:24px;cursor:pointer}
+.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}
+@media(max-width:900px){header{flex-wrap:wrap}.search{order:3;max-width:none;flex-basis:100%}.features{grid-template-columns:repeat(2,1fr)}.feature:nth-child(2){border-right:0}.feature:nth-child(-n+2){border-bottom:1px solid var(--line)}.categories{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.topbar{justify-content:center;text-align:center}header{padding:14px 5%;gap:12px}.brand{min-width:0}.brand strong{font-size:21px}.actions .btn{padding:9px;font-size:12px}.hero{min-height:420px}.hero-content{padding:28px}.features{grid-template-columns:1fr}.feature{border-right:0;border-bottom:1px solid var(--line)!important}.feature:last-child{border-bottom:0!important}.categories{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:1fr 1fr;gap:10px}.product img{height:125px}.product-body{padding:10px}.product h3{font-size:14px}.product-actions{flex-direction:column}.section-head h2{font-size:22px}.join{display:block;padding:25px}.join .btn{margin-top:18px}.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar"><span>🇺🇬 Proudly connecting Uganda's farmers and buyers</span><span>Fresh produce • Livestock • Farm supplies</span></div>
+<header>
+  <a class="brand" href="#"><span class="logo">🌿</span><span><strong>EYEZEE</strong><small>Agricultural Marketplace</small></span></a>
+  <form class="search" id="searchForm"><input id="searchInput" placeholder="Search crops, livestock, seeds, equipment..." aria-label="Search marketplace"><button type="submit">Search</button></form>
+  <div class="actions"><button class="btn" onclick="openModal('loginModal')">Log in</button><button class="btn primary" onclick="openModal('joinModal')">Join EYEZEE</button></div>
+</header>
+<nav><a href="#categories">Categories</a><a href="#products">Browse products</a><a href="#farmers">Sell on EYEZEE</a><a href="#delivery">Delivery partners</a><a href="#about">About us</a></nav>
+<main>
+<div class="hero"><div class="hero-content"><div class="eyebrow">Uganda's agricultural marketplace</div><h1>From the farm to the market.</h1><p>Discover quality farm produce, livestock and agricultural supplies from farmers and businesses across Uganda.</p><a class="btn" href="#products">Explore marketplace →</a></div></div>
+<div class="features">
+ <div class="feature"><span class="ico">🌾</span><span><b>Direct from farmers</b><small>Connect with sellers across Uganda</small></span></div>
+ <div class="feature"><span class="ico">🛡️</span><span><b>Trusted marketplace</b><small>Seller and listing verification</small></span></div>
+ <div class="feature"><span class="ico">🚚</span><span><b>Flexible delivery</b><small>Companies and independent drivers</small></span></div>
+ <div class="feature"><span class="ico">📍</span><span><b>Nationwide reach</b><small>Find products throughout Uganda</small></span></div>
+</div>
+<section id="categories"><div class="section-head"><div><h2>Shop by category</h2><p>Find what you need for your farm, home or business.</p></div></div>
+<div class="categories">
+ <a class="category" href="#products" data-category="Crops"><span class="emoji">🌽</span><b>Crops & grains</b></a>
+ <a class="category" href="#products" data-category="Livestock"><span class="emoji">🐄</span><b>Livestock</b></a>
+ <a class="category" href="#products" data-category="Poultry"><span class="emoji">🐔</span><b>Poultry</b></a>
+ <a class="category" href="#products" data-category="Fruits"><span class="emoji">🍌</span><b>Fruits & vegetables</b></a>
+ <a class="category" href="#products" data-category="Inputs"><span class="emoji">🌱</span><b>Seeds & fertilisers</b></a>
+ <a class="category" href="#products" data-category="Equipment"><span class="emoji">🚜</span><b>Farm equipment</b></a>
+</div></section>
+<section id="products"><div class="section-head"><div><h2>Explore the marketplace</h2><p>Sample listings shown for the website preview.</p></div></div>
+<div class="toolbar"><select id="categoryFilter"><option value="All">All categories</option><option>Crops</option><option>Livestock</option><option>Poultry</option><option>Fruits</option><option>Inputs</option><option>Equipment</option></select><select id="sortFilter"><option value="default">Sort: Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></div>
+<div class="products" id="productGrid"></div>
+</section>
+<section class="join" id="farmers"><div><h2>Are you a farmer or agricultural supplier?</h2><p>Create your seller profile and reach customers beyond your local market.</p></div><button class="btn primary" onclick="openModal('joinModal')">Become a seller</button></section>
+<section class="join" id="delivery" style="margin-top:18px"><div><h2>Do you provide delivery services?</h2><p>Register your delivery company or join as an independent driver.</p></div><button class="btn" onclick="openModal('deliveryModal')">Join as delivery partner</button></section>
+</main>
+<footer id="about"><div class="footer-grid"><div><div class="brand"><span class="logo">🌿</span><span><strong style="color:white">EYEZEE</strong><small style="color:#c5d8c8">Agricultural Marketplace</small></span></div><p>Connecting Farmers. Empowering Businesses. Growing Uganda.</p></div><div><h3>Marketplace</h3><p><a href="#categories">Browse categories</a><br><a href="#products">Find products</a><br><a href="#farmers">Sell on EYEZEE</a></p></div><div><h3>Get in touch</h3><p>Customer support<br>WhatsApp / Phone: Add your business number<br>Email: Add your support email</p></div></div><div class="copyright">© 2026 EYEZEE Agricultural Marketplace. Website preview.</div></footer>
+<div class="modal" id="joinModal"><div class="modal-card"><button class="close" onclick="closeModal('joinModal')">×</button><h2>Join EYEZEE</h2><p>Create an account to buy or sell on the marketplace.</p><label>Your name</label><input placeholder="Full name"><label>Phone number</label><input placeholder="+256..."><label>I want to join as</label><select><option>Buyer</option><option>Farmer / Seller</option></select><button class="btn primary" style="width:100%" onclick="demoMessage()">Continue</button><p class="notice">Preview only: account registration will be connected when the website backend is set up.</p></div></div>
+<div class="modal" id="loginModal"><div class="modal-card"><button class="close" onclick="closeModal('loginModal')">×</button><h2>Welcome back</h2><label>Phone number or email</label><input placeholder="Enter phone or email"><label>Password</label><input type="password" placeholder="Password"><button class="btn primary" style="width:100%" onclick="demoMessage()">Log in</button><p class="notice">Login is a visual preview; secure authentication is not connected yet.</p></div></div>
+<div class="modal" id="deliveryModal"><div class="modal-card"><button class="close" onclick="closeModal('deliveryModal')">×</button><h2>Become a delivery partner</h2><label>Company / driver name</label><input placeholder="Name"><label>Phone number</label><input placeholder="+256..."><label>Service type</label><select><option>Independent driver</option><option>Delivery company</option><option>Livestock / animal transport</option></select><button class="btn primary" style="width:100%" onclick="demoMessage()">Submit interest</button><p class="notice">Preview only: applications will be stored after backend setup.</p></div></div>
+<script>
+const items=[
+{name:"Fresh maize grain",cat:"Crops",price:1200,unit:"per kg",place:"Mbale, Uganda",img:"https://images.unsplash.com/photo-1601593768797-6fb1b2e2a7e8?auto=format&fit=crop&w=700&q=80"},
+{name:"Mature dairy cow",cat:"Livestock",price:1800000,unit:"per animal",place:"Mbarara, Uganda",img:"https://images.unsplash.com/photo-1516467508483-a7212f051e92?auto=format&fit=crop&w=700&q=80"},
+{name:"Broiler chickens",cat:"Poultry",price:18000,unit:"each",place:"Wakiso, Uganda",img:"https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=700&q=80"},
+{name:"Fresh matooke",cat:"Fruits",price:25000,unit:"per bunch",place:"Masaka, Uganda",img:"https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&w=700&q=80"},
+{name:"Quality bean seeds",cat:"Inputs",price:8500,unit:"per kg",place:"Kampala, Uganda",img:"https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=700&q=80"},
+{name:"Hand tractor",cat:"Equipment",price:4200000,unit:"each",place:"Luwero, Uganda",img:"https://images.unsplash.com/photo-1592982537447-6f2a6a0b2d4b?auto=format&fit=crop&w=700&q=80"},
+{name:"Fresh tomatoes",cat:"Fruits",price:3000,unit:"per kg",place:"K tomato market, Uganda",img:"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=700&q=80"},
+{name:"Boer goats",cat:"Livestock",price:250000,unit:"per animal",place:"Soroti, Uganda",img:"https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&w=700&q=80"}
+];
+const fmt=n=>"UGX "+n.toLocaleString("en-US");
+function render(){let q=document.getElementById("searchInput").value.toLowerCase(),c=document.getElementById("categoryFilter").value,s=document.getElementById("sortFilter").value;let list=items.filter(x=>(c==="All"||x.cat===c)&&(x.name.toLowerCase().includes(q)||x.place.toLowerCase().includes(q)||x.cat.toLowerCase().includes(q)));if(s==="low")list.sort((a,b)=>a.price-b.price);if(s==="high")list.sort((a,b)=>b.price-a.price);document.getElementById("productGrid").innerHTML=list.map(x=>`<article class="product"><img src="${x.img}" alt="${x.name}" onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80'"><div class="product-body"><span class="tag">${x.cat}</span><h3>${x.name}</h3><div class="location">📍 ${x.place}</div><div class="price">${fmt(x.price)} <small style="font-size:11px;font-weight:500;color:#68766b">${x.unit}</small></div><div class="product-actions"><button class="btn primary" onclick="contactSeller('${x.name}')">Contact seller</button><button class="btn" onclick="contactSeller('${x.name}')">Details</button></div></div></article>`).join("")||"<p>No listings match your search. Try another term or category.</p>";}
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();render();document.getElementById("products").scrollIntoView({behavior:"smooth"})});document.getElementById("categoryFilter").addEventListener("change",render);document.getElementById("sortFilter").addEventListener("change",render);
+document.querySelectorAll(".category").forEach(a=>a.addEventListener("click",()=>{document.getElementById("categoryFilter").value=a.dataset.category;render()}));
+function openModal(id){document.getElementById(id).classList.add("show")}function closeModal(id){document.getElementById(id).classList.remove("show")}
+function demoMessage(){alert("This is a website preview. Registration and account services will work after the backend is connected.");}
+function contactSeller(name){alert("Seller contact for "+name+" will appear here once verified seller accounts and messaging are connected.");}
+render();
+</script>
+</body></html>
