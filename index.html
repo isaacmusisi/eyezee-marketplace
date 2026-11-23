@@ -87,8 +87,55 @@ function showDetails(id){const x=items.find(i=>i.id===id);if(x)notify(x.name+"\n
 function contactSeller(id){const x=items.find(i=>i.id===id);if(!x)return;const s=x.seller||{};notify("Seller: "+(s.store_name||"EYEZEE seller")+"\nPhone: "+(s.contact_phone||"Not provided")+"\nWhatsApp: "+(s.whatsapp_number||"Not provided"));}
 document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();render();document.getElementById("products").scrollIntoView({behavior:"smooth"});});document.getElementById("categoryFilter").addEventListener("change",render);document.getElementById("sortFilter").addEventListener("change",render);document.querySelectorAll(".category").forEach(a=>a.addEventListener("click",()=>{document.getElementById("categoryFilter").value=a.dataset.category;render();}));
 function openModal(id){document.getElementById(id).classList.add("show")}function closeModal(id){document.getElementById(id).classList.remove("show")}
-async function setupUser(user){currentUser=user;const m=user.user_metadata||{},role=m.role==="farmer"?"farmer":"buyer";const {error:pe}=await db.from("profiles").update({full_name:m.full_name||"EYEZEE user",phone:m.phone||null,role,district:m.district||null}).eq("id",user.id);if(pe)console.warn("Profile update",pe.message);currentStore=null;if(role==="farmer"){const {data:store}=await db.from("farmer_stores").select("id,store_name,district").eq("owner_id",user.id).maybeSingle();if(store)currentStore=store;else{const {data:newStore,error}=await db.from("farmer_stores").insert({owner_id:user.id,store_name:m.store_name||m.full_name||"My EYEZEE Store",description:"EYEZEE farmer store",district:m.district||"Uganda",contact_phone:m.phone||null,whatsapp_number:m.phone||null}).select("id,store_name,district").single();if(error)notify("Account active, but store setup failed: "+error.message);else currentStore=newStore;}}document.getElementById("sellerPanel").style.display=role==="farmer"?"block":"none";document.querySelector(".actions").innerHTML=`<span style="font-size:13px;color:var(--green)">Hello, ${m.full_name||"member"}</span><button class="btn" onclick="signOut()">Log out</button>`;await loadMarketplace();}
-document.getElementById("signupForm").addEventListener("submit",async e=>{e.preventDefault();const m={full_name:document.getElementById("signupName").value.trim(),phone:document.getElementById("signupPhone").value.trim(),role:document.getElementById("signupRole").value,district:document.getElementById("signupDistrict").value.trim(),store_name:document.getElementById("signupStore").value.trim()};if(m.role==="farmer"&&!m.store_name){notify("Please enter your farm or store name.");return;}const b=e.submitter;b.disabled=true;b.textContent="Creating account...";const {data,error}=await db.auth.signUp({email:document.getElementById("signupEmail").value.trim(),password:document.getElementById("signupPassword").value,options:{data:m}});b.disabled=false;b.textContent="Create account";if(error){notify("Sign-up failed: "+error.message);return;}closeModal("joinModal");if(data.session&&data.user){await setupUser(data.user);notify("Welcome to EYEZEE! Your account has been created.");}else notify("Account created. Check your email for a confirmation link, then log in.");});
+
+async function setupUser(user) {
+  currentUser = user;
+
+  const m = user.user_metadata || {};
+
+  // Read the trusted role from the database.
+  const { data: profile, error: profileError } = await db
+    .from("profiles")
+    .select("full_name, role, district")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError || !profile) {
+    notify("Could not load your account profile: " + (profileError?.message || "Profile not found"));
+    return;
+  }
+
+  const role = profile.role;
+
+  currentStore = null;
+
+  if (role === "farmer" || role === "admin") {
+    const { data: store, error: storeError } = await db
+      .from("farmer_stores")
+      .select("id, store_name, district")
+      .eq("owner_id", user.id)
+      .maybeSingle();
+
+    if (storeError) {
+      notify("Could not load your store: " + storeError.message);
+    } else {
+      currentStore = store;
+    }
+  }
+
+  document.getElementById("sellerPanel").style.display =
+    (role === "farmer" || role === "admin") ? "block" : "none";
+
+  document.querySelector(".actions").innerHTML = `
+    <span style="font-size:13px;color:var(--green)">
+      Hello, ${profile.full_name || "member"} (${role})
+    </span>
+    <button class="btn" onclick="signOut()">Log out</button>
+  `;
+
+  await loadMarketplace();
+}
+.addEventListener("submit",async e=>{e.preventDefault();const m={full_name:document.getElementById("signupName").value.trim(),phone:document.getElementById("signupPhone").value.trim(),role:document.getElementById("signupRole").value,district:document.getElementById("signupDistrict").value.trim(),store_name:document.getElementById("signupStore").value.trim()};if(m.role==="farmer"&&!m.store_name){notify("Please enter your farm or store name.");return;}const b=e.submitter;b.disabled=true;b.textContent="Creating account...";const {data,error}=await db.auth.signUp({email:document.getElementById("signupEmail").value.trim(),password:document.getElementById("signupPassword").value,options:{data:m}});b.disabled=false;b.textContent="Create account";if(error){notify("Sign-up failed: "+error.message);return;}closeModal("joinModal");if(data.session&&data.user){await setupUser(data.user);notify("Welcome to EYEZEE! Your account has been created.");}else notify("Account created. Check your email for a confirmation link, then log in.");});
 document.getElementById("loginForm").addEventListener("submit",async e=>{e.preventDefault();const b=e.submitter;b.disabled=true;b.textContent="Logging in...";const {data,error}=await db.auth.signInWithPassword({email:document.getElementById("loginEmail").value.trim(),password:document.getElementById("loginPassword").value});b.disabled=false;b.textContent="Log in";if(error){notify("Login failed: "+error.message);return;}closeModal("loginModal");await setupUser(data.user);notify("You are now logged in to EYEZEE.");});
 document.getElementById("listingForm").addEventListener("submit",async e=>{e.preventDefault();if(!currentUser||!currentStore){notify("Please log in with your farmer account first.");return;}const b=e.submitter;b.disabled=true;b.textContent="Publishing...";const image=document.getElementById("listingImage").value.trim();const payload={store_id:currentStore.id,title:document.getElementById("listingTitle").value.trim(),description:document.getElementById("listingDescription").value.trim(),category:document.getElementById("listingCategory").value,price_ugx:Number(document.getElementById("listingPrice").value),unit:document.getElementById("listingUnit").value.trim(),quantity_available:Number(document.getElementById("listingQuantity").value),district:document.getElementById("listingDistrict").value.trim(),image_urls:image?[image]:[],status:"active"};const {error}=await db.from("listings").insert(payload);b.disabled=false;b.textContent="Publish listing";if(error){notify("Could not publish listing: "+error.message);return;}e.target.reset();notify("Listing saved to Supabase. It may only be publicly visible after your store is verified.");await loadMarketplace();});
 async function signOut(){await db.auth.signOut();currentUser=null;currentStore=null;document.getElementById("sellerPanel").style.display="none";document.querySelector(".actions").innerHTML=`<button class="btn" onclick="openModal('loginModal')">Log in</button><button class="btn primary" onclick="openModal('joinModal')">Join EYEZEE</button>`;await loadMarketplace();}
