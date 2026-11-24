@@ -91,6 +91,48 @@ function openModal(id){document.getElementById(id).classList.add("show")}functio
 async function setupUser(user) {
   currentUser = user;
 
+  const { data: profile, error } = await db
+    .from("profiles")
+    .select("full_name, role, district")
+    .eq("id", user.id)
+    .single();
+
+  if (error || !profile) {
+    notify("Could not load profile: " + (error?.message || "Profile not found"));
+    return;
+  }
+
+  const role = profile.role;
+  currentStore = null;
+
+  if (role === "farmer" || role === "admin") {
+    const { data: store, error: storeError } = await db
+      .from("farmer_stores")
+      .select("id, store_name, district")
+      .eq("owner_id", user.id)
+      .maybeSingle();
+
+    if (storeError) {
+      notify("Could not load store: " + storeError.message);
+    } else {
+      currentStore = store;
+    }
+  }
+
+  document.getElementById("sellerPanel").style.display =
+    (role === "farmer" || role === "admin") ? "block" : "none";
+
+  document.querySelector(".actions").innerHTML = `
+    <span style="font-size:13px;color:var(--green)">
+      Hello, ${profile.full_name || "member"} (${role})
+    </span>
+    <button class="btn" onclick="signOut()">Log out</button>
+  `;
+
+  await loadMarketplace();
+} {
+  currentUser = user;
+
   const m = user.user_metadata || {};
 
   // Read the trusted role from the database.
