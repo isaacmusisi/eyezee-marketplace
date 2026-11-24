@@ -72,6 +72,24 @@ footer{background:var(--deep);color:#eaf5e9;padding:42px 5% 22px;margin-top:55px
     Loading subscriptions...
   </div>
 </div>
+ 
+<div id="adminVerificationPanel"
+     style="display:none;margin:15px 0;padding:18px;border:1px solid var(--line);border-radius:12px">
+
+  <h3>EYEZEE Admin – Seller Verification</h3>
+
+  <p>Review seller stores and manage their verification.</p>
+
+  <button class="btn" type="button" onclick="loadAdminVerifications()">
+    Refresh sellers
+  </button>
+
+  <div id="adminVerificationList" style="margin-top:15px">
+    Loading sellers...
+  </div>
+
+</div>
+ 
 
   <div id="subscriptionPanel" class="modal-card"
      style="max-width:100%;margin:15px 0;border:1px solid var(--line);box-shadow:none">
