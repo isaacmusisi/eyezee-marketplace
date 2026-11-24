@@ -170,10 +170,28 @@ async function loadAdminSubscriptions() {
     list.textContent = "No seller subscriptions found.";
     return;
   }
+  
+  const storeIds = [...new Set(subscriptions.map(sub => sub.store_id))];
+
+  const { data: stores, error: storesError } = await db
+    .from("farmer_stores")
+    .select("id, store_name, district")
+    .in("id", storeIds);
+
+  if (storesError) {
+    list.textContent = "Could not load store names: " + storesError.message;
+    return;
+  }
+
+  const storeMap = Object.fromEntries(
+    (stores || []).map(store => [store.id, store])
+  );
+
 
   list.innerHTML = subscriptions.map(sub => `
     <div style="padding:12px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px">
-      <p><strong>Store ID:</strong> ${sub.store_id}</p>
+      <p><strong>Store:</strong> ${storeMap[sub.store_id]?.store_name || "Unknown store"}</p>
+<p><strong>District:</strong> ${storeMap[sub.store_id]?.district || "Not provided"}</p>
       <p><strong>Fee:</strong> UGX ${Number(sub.fee_ugx).toLocaleString()}</p>
       <p><strong>Status:</strong> ${sub.status.toUpperCase()}</p>
       <p><strong>Expiry:</strong> ${
