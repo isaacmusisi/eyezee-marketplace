@@ -60,7 +60,20 @@ footer{background:var(--deep);color:#eaf5e9;padding:42px 5% 22px;margin-top:55px
 </section>
 <section class="join" id="farmers"><div><h2>Are you a farmer or agricultural supplier?</h2><p>Create your seller profile and reach customers beyond your local market.</p></div><button class="btn primary" onclick="openModal('joinModal')">Become a seller</button></section>
 <section id="sellerPanel" style="display:none"><div class="section-head"><div><h2>Your seller dashboard</h2><p>Add a product listing to your EYEZEE store.</p></div><button class="btn" type="button" onclick="signOut()">Log out</button></div>
-<div id="subscriptionPanel" class="modal-card"
+
+<div id="adminSubscriptionPanel"
+     style="display:none;margin:15px 0;padding:18px;border:1px solid var(--line);border-radius:12px">
+  <h3>EYEZEE Admin – Seller Subscriptions</h3>
+  <p>Manage seller monthly subscriptions.</p>
+  <button class="btn" type="button" onclick="loadAdminSubscriptions()">
+    Refresh subscriptions
+  </button>
+  <div id="adminSubscriptionList" style="margin-top:15px">
+    Loading subscriptions...
+  </div>
+</div>
+
+  <div id="subscriptionPanel" class="modal-card"
      style="max-width:100%;margin:15px 0;border:1px solid var(--line);box-shadow:none">
   <h3>Seller Monthly Subscription</h3>
   <p>Subscription fee: <strong>UGX 1,000 per month</strong></p>
