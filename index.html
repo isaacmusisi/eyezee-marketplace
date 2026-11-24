@@ -245,6 +245,69 @@ async function activateSellerSubscription(subscriptionId) {
   await loadAdminSubscriptions();
 }
 
+async function loadAdminVerifications() {
+  const list = document.getElementById("adminVerificationList");
+  list.textContent = "Loading sellers...";
+
+  const { data: stores, error } = await db
+    .from("farmer_stores")
+    .select("id, store_name, district, verification_status")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    list.textContent = "Could not load sellers: " + error.message;
+    return;
+  }
+
+  if (!stores || stores.length === 0) {
+    list.textContent = "No seller stores found.";
+    return;
+  }
+
+  list.innerHTML = stores.map(store => `
+    <div style="padding:12px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px">
+      <p><strong>Store:</strong> ${store.store_name}</p>
+      <p><strong>District:</strong> ${store.district || "Not provided"}</p>
+      <p><strong>Status:</strong> ${store.verification_status.toUpperCase()}</p>
+
+      ${store.verification_status !== "verified" ? `
+        <button class="btn primary" type="button"
+          onclick="updateStoreVerification('${store.id}', 'verified')">
+          Approve seller
+        </button>
+      ` : ""}
+
+      ${store.verification_status !== "rejected" ? `
+        <button class="btn" type="button"
+          onclick="updateStoreVerification('${store.id}', 'rejected')">
+          Reject seller
+        </button>
+      ` : ""}
+    </div>
+  `).join("");
+}
+
+async function updateStoreVerification(storeId, newStatus) {
+  const action = newStatus === "verified" ? "approve" : "reject";
+
+  if (!confirm("Are you sure you want to " + action + " this seller?")) {
+    return;
+  }
+
+  const { error } = await db
+    .from("farmer_stores")
+    .update({ verification_status: newStatus })
+    .eq("id", storeId);
+
+  if (error) {
+    alert("Could not update seller: " + error.message);
+    return;
+  }
+
+  alert("Seller " + action + "d successfully.");
+  await loadAdminVerifications();
+}
+
 async function setupUser(user) {
   currentUser = user;
 
