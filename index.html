@@ -325,7 +325,8 @@ async function setupUser(user) {
   const role = profile.role;
   currentStore = null;
 
-  if (role === "farmer" || role === "admin") {
+  if (role === "farmer" || role === "admin" document.getElementById("adminVerificationPanel").style.display = "block";
+loadAdminVerifications();) {
     const { data: store, error: storeError } = await db
       .from("farmer_stores")
       .select("id, store_name, district")
