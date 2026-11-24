@@ -102,6 +102,42 @@ document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDef
 function openModal(id){document.getElementById(id).classList.add("show")}function closeModal(id){document.getElementById(id).classList.remove("show")}
 
 
+async function loadSellerSubscription() {
+  const statusElement = document.getElementById("subscriptionStatus");
+  const expiryElement = document.getElementById("subscriptionExpiry");
+
+  if (!currentStore) {
+    statusElement.textContent = "No seller store found.";
+    return;
+  }
+
+  const { data: subscription, error } = await db
+    .from("seller_subscriptions")
+    .select("fee_ugx, billing_interval, status, current_period_end")
+    .eq("store_id", currentStore.id)
+    .maybeSingle();
+
+  if (error) {
+    statusElement.textContent = "Could not load subscription: " + error.message;
+    return;
+  }
+
+  if (!subscription) {
+    statusElement.textContent = "No subscription record found.";
+    return;
+  }
+
+  statusElement.textContent =
+    "Status: " + subscription.status.toUpperCase() +
+    " | Fee: UGX " + Number(subscription.fee_ugx).toLocaleString() +
+    " per month";
+
+  expiryElement.textContent = subscription.current_period_end
+    ? "Subscription expires: " +
+      new Date(subscription.current_period_end).toLocaleDateString()
+    : "No payment period has started yet.";
+}
+
 async function setupUser(user) {
   currentUser = user;
 
@@ -135,6 +171,9 @@ async function setupUser(user) {
 
   document.getElementById("sellerPanel").style.display =
     (role === "farmer" || role === "admin") ? "block" : "none";
+ if (role === "farmer" || role === "admin") {
+  await loadSellerSubscription();
+} 
 
   document.querySelector(".actions").innerHTML = `
     <span style="font-size:13px;color:var(--green)">
