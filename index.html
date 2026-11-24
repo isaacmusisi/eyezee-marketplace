@@ -123,6 +123,64 @@ async function loadSellerSubscription() {
     statusElement.textContent = "No seller store found.";
     return;
   }
+  
+async function loadAdminSubscriptions() {
+  const list = document.getElementById("adminSubscriptionList");
+  list.textContent = "Loading subscriptions...";
+
+  const { data: subscriptions, error } = await db
+    .from("seller_subscriptions")
+    .select("id, store_id, fee_ugx, status, current_period_end")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    list.textContent = "Could not load subscriptions: " + error.message;
+    return;
+  }
+
+  if (!subscriptions || subscriptions.length === 0) {
+    list.textContent = "No seller subscriptions found.";
+    return;
+  }
+
+  list.innerHTML = subscriptions.map(sub => `
+    <div style="padding:12px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px">
+      <p><strong>Store ID:</strong> ${sub.store_id}</p>
+      <p><strong>Fee:</strong> UGX ${Number(sub.fee_ugx).toLocaleString()}</p>
+      <p><strong>Status:</strong> ${sub.status.toUpperCase()}</p>
+      <p><strong>Expiry:</strong> ${
+        sub.current_period_end
+          ? new Date(sub.current_period_end).toLocaleDateString()
+          : "Not started"
+      }</p>
+      ${sub.status === "pending" || sub.status === "expired" ? `
+        <button class="btn primary" type="button"
+          onclick="activateSellerSubscription('${sub.id}')">
+          Activate for 30 days
+        </button>
+      ` : ""}
+    </div>
+  `).join("");
+}
+
+async function activateSellerSubscription(subscriptionId) {
+  if (!confirm("Have you confirmed this seller's payment of UGX 1,000?")) {
+    return;
+  }
+
+  const { error } = await db.rpc("activate_seller_subscription", {
+    p_subscription_id: subscriptionId
+  });
+
+  if (error) {
+    alert("Activation failed: " + error.message);
+    return;
+  }
+
+  alert("Subscription activated for 30 days.");
+  await loadAdminSubscriptions();
+}
+
 
   const { data: subscription, error } = await db
     .from("seller_subscriptions")
