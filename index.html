@@ -244,6 +244,17 @@ async function setupUser(user) {
     (role === "farmer" || role === "admin") ? "block" : "none";
  if (role === "farmer" || role === "admin") {
   await loadSellerSubscription();
+   
+const adminPanel = document.getElementById("adminSubscriptionPanel");
+
+if (adminPanel) {
+  adminPanel.style.display = role === "admin" ? "block" : "none";
+}
+
+if (role === "admin") {
+  await loadAdminSubscriptions();
+}
+
 } 
 
   document.querySelector(".actions").innerHTML = `
