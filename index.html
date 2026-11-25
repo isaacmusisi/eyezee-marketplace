@@ -36,7 +36,16 @@ footer{background:var(--deep);color:#eaf5e9;padding:42px 5% 22px;margin-top:55px
   <form class="search" id="searchForm"><input id="searchInput" placeholder="Search crops, livestock, seeds, equipment..." aria-label="Search marketplace"><button type="submit">Search</button></form>
   <div class="actions"><button class="btn" onclick="openModal('loginModal')">Log in</button><button class="btn primary" onclick="openModal('joinModal')">Join EYEZEE</button></div>
 </header>
-<nav><a href="#categories">Categories</a><a href="#products">Browse products</a><a href="#farmers">Sell on EYEZEE</a><a href="#delivery">Delivery partners</a><a href="#about">About us</a></nav>
+
+<nav>
+  <a href="#categories">Categories</a>
+  <a href="#products">Browse products</a>
+  <a href="#cart">My Cart 🛒</a>
+  <a href="#farmers">Sell on EYEZEE</a>
+  <a href="#delivery">Delivery partners</a>
+  <a href="#about">About us</a>
+</nav>
+<a href="#farmers">Sell on EYEZEE</a><a href="#delivery">Delivery partners</a><a href="#about">About us</a></nav>
 <main>
 <div class="hero"><div class="hero-content"><div class="eyebrow">Uganda's agricultural marketplace</div><h1>From the farm to the market.</h1><p>Discover quality farm produce, livestock and agricultural supplies from farmers and businesses across Uganda.</p><a class="btn" href="#products">Explore marketplace →</a></div></div>
 <div class="features">
@@ -58,6 +67,26 @@ footer{background:var(--deep);color:#eaf5e9;padding:42px 5% 22px;margin-top:55px
 <div class="toolbar"><select id="categoryFilter"><option value="All">All categories</option><option>Crops</option><option>Livestock</option><option>Poultry</option><option>Fruits</option><option>Inputs</option><option>Equipment</option></select><select id="sortFilter"><option value="default">Sort: Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></div>
 <div class="products" id="productGrid"></div>
 </section>
+  
+<section id="cart" style="padding:35px 0">
+  <div class="section-head">
+    <div>
+      <h2>My Shopping Cart 🛒</h2>
+      <p>Review your selected agricultural products.</p>
+    </div>
+  </div>
+
+  <div id="cartItems">
+    <p>Your shopping cart is empty.</p>
+  </div>
+
+  <h3 id="cartTotal">Total: UGX 0</h3>
+
+  <button class="btn primary" type="button" onclick="checkout()">
+    Proceed to checkout
+  </button>
+</section>
+
 <section class="join" id="farmers"><div><h2>Are you a farmer or agricultural supplier?</h2><p>Create your seller profile and reach customers beyond your local market.</p></div><button class="btn primary" onclick="openModal('joinModal')">Become a seller</button></section>
 <section id="sellerPanel" style="display:none"><div class="section-head"><div><h2>Your seller dashboard</h2><p>Add a product listing to your EYEZEE store.</p></div><button class="btn" type="button" onclick="signOut()">Log out</button></div>
 
