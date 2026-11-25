@@ -163,7 +163,80 @@ const {data,error}=await db
  items=(data||[]).map(x=>({id:x.id,name:x.title,cat:categoryLabels[x.category]||"Other",price:Number(x.price_ugx),unit:x.unit,place:x.district+", Uganda",img:(x.image_urls&&x.image_urls[0])||"https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80",seller:x.farmer_stores||null,description:x.description}));render();
 }
 function render(){const q=document.getElementById("searchInput").value.toLowerCase(),c=document.getElementById("categoryFilter").value,s=document.getElementById("sortFilter").value;let list=items.filter(x=>(c==="All"||x.cat===c)&&(x.name.toLowerCase().includes(q)||x.place.toLowerCase().includes(q)||x.cat.toLowerCase().includes(q)));if(s==="low")list.sort((a,b)=>a.price-b.price);if(s==="high")list.sort((a,b)=>b.price-a.price);document.getElementById("productGrid").innerHTML=list.map(x=>`<article class="product"><img src="${x.img}" alt="${x.name}" onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80'"><div class="product-body"><span class="tag">${x.cat}</span><h3>${x.name}</h3><div class="location">📍 ${x.place}</div><div class="price">${fmt(x.price)} <small style="font-size:11px;font-weight:500;color:#68766b">${x.unit}</small></div><div class="product-actions"><button class="btn primary" onclick="contactSeller('${x.id}')">Contact seller</button><button class="btn" onclick="showDetails('${x.id}')">Details</button></div></div></article>`).join("")||"<p>No active database listings yet. Farmer products will appear here after they are published and the store is verified.</p>";}
-function showDetails(id){const x=items.find(i=>i.id===id);if(x)notify(x.name+"\n"+(x.description||"No description provided.")+"\n"+x.place+"\n"+fmt(x.price)+" "+x.unit);}
+
+let cart = [];
+
+function addToCart(id) {
+  const product = items.find(item => item.id === id);
+  if (!product) return;
+
+  const existing = cart.find(item => item.id === id);
+
+  if (existing) {
+    if (existing.quantity >= Number(product.quantity_available || 0)) {
+      notify("Sorry, no more stock is available.");
+      return;
+    }
+    existing.quantity++;
+  } else {
+    if (Number(product.quantity_available || 0) < 1) {
+      notify("This product is out of stock.");
+      return;
+    }
+    cart.push({ ...product, quantity: 1 });
+  }
+
+  renderCart();
+  notify(product.name + " added to your cart.");
+}
+
+function renderCart() {
+  const container = document.getElementById("cartItems");
+  const totalElement = document.getElementById("cartTotal");
+
+  if (cart.length === 0) {
+    container.innerHTML = "<p>Your shopping cart is empty.</p>";
+    totalElement.textContent = "Total: UGX 0";
+    return;
+  }
+
+  let total = 0;
+
+  container.innerHTML = cart.map(item => {
+    const subtotal = item.price * item.quantity;
+    total += subtotal;
+
+    return `
+      <div style="padding:12px;border-bottom:1px solid var(--line)">
+        <strong>${item.name}</strong>
+        <p>Price: UGX ${item.price.toLocaleString()}</p>
+        <p>Quantity: ${item.quantity}</p>
+        <p>Subtotal: UGX ${subtotal.toLocaleString()}</p>
+        <button class="btn" onclick="removeFromCart('${item.id}')">
+          Remove
+        </button>
+      </div>
+    `;
+  }).join("");
+
+  totalElement.textContent = "Total: UGX " + total.toLocaleString();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  renderCart();
+}
+
+function checkout() {
+  if (cart.length === 0) {
+    notify("Your shopping cart is empty.");
+    return;
+  }
+
+  notify("Your cart is ready. Checkout will be connected to EYEZEE orders next.");
+}
+
+  function showDetails(id){const x=items.find(i=>i.id===id);if(x)notify(x.name+"\n"+(x.description||"No description provided.")+"\n"+x.place+"\n"+fmt(x.price)+" "+x.unit);}
 function contactSeller(id){const x=items.find(i=>i.id===id);if(!x)return;const s=x.seller||{};notify("Seller: "+(s.store_name||"EYEZEE seller")+"\nPhone: "+(s.contact_phone||"Not provided")+"\nWhatsApp: "+(s.whatsapp_number||"Not provided"));}
 document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();render();document.getElementById("products").scrollIntoView({behavior:"smooth"});});document.getElementById("categoryFilter").addEventListener("change",render);document.getElementById("sortFilter").addEventListener("change",render);document.querySelectorAll(".category").forEach(a=>a.addEventListener("click",()=>{document.getElementById("categoryFilter").value=a.dataset.category;render();}));
 function openModal(id){document.getElementById(id).classList.add("show")}function closeModal(id){document.getElementById(id).classList.remove("show")}
