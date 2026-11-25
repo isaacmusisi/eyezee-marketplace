@@ -276,7 +276,19 @@ function checkout() {
     return;
   }
 
-  notify("Your cart is ready. Checkout will be connected to EYEZEE orders next.");
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  document.getElementById("checkoutTotal").textContent =
+    "Total: UGX " + total.toLocaleString();
+
+  document.getElementById("checkoutForm").style.display = "block";
+
+  document.getElementById("checkoutForm").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
   function showDetails(id){const x=items.find(i=>i.id===id);if(x)notify(x.name+"\n"+(x.description||"No description provided.")+"\n"+x.place+"\n"+fmt(x.price)+" "+x.unit);}
