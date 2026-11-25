@@ -172,6 +172,10 @@ const {data,error}=await db
   seller:x.farmer_stores||null,
   description:x.description
 }));
+
+render();
+}
+
 function render(){const q=document.getElementById("searchInput").value.toLowerCase(),c=document.getElementById("categoryFilter").value,s=document.getElementById("sortFilter").value;let list=items.filter(x=>(c==="All"||x.cat===c)&&(x.name.toLowerCase().includes(q)||x.place.toLowerCase().includes(q)||x.cat.toLowerCase().includes(q)));if(s==="low")list.sort((a,b)=>a.price-b.price);if(s==="high")list.sort((a,b)=>b.price-a.price);document.getElementById("productGrid").innerHTML=list.map(x=>`<article class="product"><img src="${x.img}" alt="${x.name}" onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=700&q=80'"><div class="product-body"><span class="tag">${x.cat}</span><h3>${x.name}</h3><div class="location">📍 ${x.place}</div><div class="price">${fmt(x.price)} <small style="font-size:11px;font-weight:500;color:#68766b">${x.unit}</small></div>
 <div class="product-actions">
 <button class="btn primary" onclick="addToCart('${x.id}')">Add to Cart</button>
